@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster | Online Viktorina</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-question-circle"></i>
+                <h1>Quiz<span>Master</span></h1>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <ul>
+                    <li><a href="#" class="active"><i class="fas fa-home"></i> Bosh sahifa</a></li>
+                    <li><a href="#quizzes"><i class="fas fa-puzzle-piece"></i> Testlar</a></li>
+                    <li><a href="#rating"><i class="fas fa-trophy"></i> Reyting</a></li>
+                    <li><a href="#about"><i class="fas fa-info-circle"></i> Biz haqimizda</a></li>
+                </ul>
+            </div>
+            <div class="nav-buttons" id="navButtons">
+                <button class="btn-login" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Kirish</button>
+                <button class="btn-register" id="registerBtn"><i class="fas fa-user-plus"></i> Ro'yxatdan o'tish</button>
+                <div class="user-profile" id="userProfile" style="display: none;">
+                    <img src="https://ui-avatars.com/api/?name=User&background=6c5ce7&color=fff&size=40" alt="User">
+                    <span id="usernameDisplay"></span>
+                    <button class="btn-logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </div>
+            <div class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MODAL (Login/Register) -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Kirish</h2>
+                <span class="close-modal" id="closeModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="auth-tabs">
+                    <button class="tab-btn active" id="loginTab">Kirish</button>
+                    <button class="tab-btn" id="registerTab">Ro'yxatdan o'tish</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm" class="auth-form active">
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="loginEmail" placeholder="example@mail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Parol</label>
+                        <input type="password" id="loginPassword" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-submit"><i class="fas fa-sign-in-alt"></i> Kirish</button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="registerForm" class="auth-form">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Ism</label>
+                        <input type="text" id="regName" placeholder="Ismingiz" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="regEmail" placeholder="example@mail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Parol</label>
+                        <input type="password" id="regPassword" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Parolni takrorlang</label>
+                        <input type="password" id="regConfirmPassword" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-submit"><i class="fas fa-user-plus"></i> Ro'yxatdan o'tish</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Bilinglarni <span class="gradient-text">Sinab Ko'ring</span></h1>
+            <p>Turli fanlardan qiziqarli testlar, reyting va sovrinlar!</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <i class="fas fa-users"></i>
+                    <span class="stat-number" id="totalUsers">0</span>
+                    <span class="stat-label">Foydalanuvchilar</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-question-circle"></i>
+                    <span class="stat-number" id="totalQuizzes">0</span>
+                    <span class="stat-label">Testlar</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-trophy"></i>
+                    <span class="stat-number" id="totalPlays">0</span>
+                    <span class="stat-label">Yechilgan</span>
+                </div>
+            </div>
+            <button class="btn-start" onclick="document.querySelector('#quizzes').scrollIntoView({behavior: 'smooth'})">
+                <i class="fas fa-play"></i> Testlarni Boshlash
+            </button>
+        </div>
+        <div class="hero-image">
+          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Quiz Time" style="width: 100%; max-width: 400px; animation: bounce 2s infinite;">
+          <style>
+              @keyframes bounce {
+                  0%, 100% { transform: translateY(0); }
+                  50% { transform: translateY(-20px); }
+              }
+          </style>
+        </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="categories">
+        <h2 class="section-title"><i class="fas fa-puzzle-piece"></i> Test Kategoriyalari</h2>
+        <div class="categories-container">
+            <div class="category-card" data-category="matematika">
+                <div class="category-icon"><i class="fas fa-calculator"></i></div>
+                <h3>Matematika</h3>
+                <p>15 ta test | 1200+ yechilgan</p>
+            </div>
+            <div class="category-card" data-category="fizika">
+                <div class="category-icon"><i class="fas fa-flask"></i></div>
+                <h3>Fizika</h3>
+                <p>12 ta test | 950+ yechilgan</p>
+            </div>
+            <div class="category-card" data-category="tarix">
+                <div class="category-icon"><i class="fas fa-landmark"></i></div>
+                <h3>Tarix</h3>
+                <p>10 ta test | 780+ yechilgan</p>
+            </div>
+            <div class="category-card" data-category="adabiyot">
+                <div class="category-icon"><i class="fas fa-book"></i></div>
+                <h3>Adabiyot</h3>
+                <p>8 ta test | 620+ yechilgan</p>
+            </div>
+            <div class="category-card" data-category="informatika">
+                <div class="category-icon"><i class="fas fa-laptop-code"></i></div>
+                <h3>Informatika</h3>
+                <p>10 ta test | 890+ yechilgan</p>
+            </div>
+            <div class="category-card" data-category="geografiya">
+                <div class="category-icon"><i class="fas fa-globe"></i></div>
+                <h3>Geografiya</h3>
+                <p>8 ta test | 540+ yechilgan</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUIZZES SECTION -->
+    <section id="quizzes" class="quizzes-section">
+        <h2 class="section-title"><i class="fas fa-puzzle-piece"></i> Mashhur Testlar</h2>
+        <div class="quizzes-filter">
+            <button class="filter-btn active" data-filter="all">Barchasi</button>
+            <button class="filter-btn" data-filter="matematika">Matematika</button>
+            <button class="filter-btn" data-filter="fizika">Fizika</button>
+            <button class="filter-btn" data-filter="tarix">Tarix</button>
+            <button class="filter-btn" data-filter="adabiyot">Adabiyot</button>
+        </div>
+        <div class="quizzes-container" id="quizzesContainer"></div>
+    </section>
+
+    <!-- QUIZ MODAL -->
+    <div class="quiz-modal" id="quizModal">
+        <div class="quiz-modal-content">
+            <div class="quiz-modal-header">
+                <h2 id="quizModalTitle">Matematika Testi</h2>
+                <span class="close-quiz-modal" id="closeQuizModal">&times;</span>
+            </div>
+            <div class="quiz-modal-body" id="quizModalBody">
+                <div class="quiz-info">
+                    <div class="quiz-progress">
+                        <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                    </div>
+                    <div class="quiz-stats">
+                        <span><i class="fas fa-question"></i> <span id="currentQuestion">1</span>/<span id="totalQuestions">10</span></span>
+                        <span><i class="fas fa-star"></i> <span id="score">0</span> ball</span>
+                        <span><i class="fas fa-clock"></i> <span id="timer">15</span>s</span>
+                    </div>
+                </div>
+                <div class="question-container" id="questionContainer">
+                    <h3 id="questionText">Savol matni</h3>
+                    <div class="options-container" id="optionsContainer"></div>
+                </div>
+                <div class="quiz-controls">
+                    <button class="quiz-btn prev-btn" id="prevBtn" disabled><i class="fas fa-arrow-left"></i> Oldingi</button>
+                    <button class="quiz-btn next-btn" id="nextBtn">Keyingi <i class="fas fa-arrow-right"></i></button>
+                    <button class="quiz-btn finish-btn" id="finishBtn" style="display: none;">Yakunlash <i class="fas fa-check"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULT MODAL -->
+    <div class="result-modal" id="resultModal">
+        <div class="result-modal-content">
+            <div class="result-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <h2>Test Yakunlandi!</h2>
+            <div class="result-stats">
+                <div class="result-stat">
+                    <span class="result-label">To'g'ri javoblar</span>
+                    <span class="result-value" id="correctAnswers">0</span>
+                </div>
+                <div class="result-stat">
+                    <span class="result-label">Noto'g'ri javoblar</span>
+                    <span class="result-value" id="wrongAnswers">0</span>
+                </div>
+                <div class="result-stat">
+                    <span class="result-label">Umumiy ball</span>
+                    <span class="result-value" id="totalScore">0</span>
+                </div>
+                <div class="result-stat">
+                    <span class="result-label">Foiz</span>
+                    <span class="result-value" id="percentage">0%</span>
+                </div>
+            </div>
+            <div class="result-message" id="resultMessage"></div>
+            <div class="result-buttons">
+                <button class="result-btn again-btn" id="playAgainBtn"><i class="fas fa-redo-alt"></i> Qayta boshlash</button>
+                <button class="result-btn home-btn" id="homeBtn"><i class="fas fa-home"></i> Bosh sahifa</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RATING SECTION -->
+    <section id="rating" class="rating-section">
+        <h2 class="section-title"><i class="fas fa-trophy"></i> Reyting Jadvali</h2>
+        <div class="rating-container">
+            <div class="rating-tabs">
+                <button class="rating-tab active" data-period="daily">Kunlik</button>
+                <button class="rating-tab" data-period="weekly">Haftalik</button>
+                <button class="rating-tab" data-period="monthly">Oylik</button>
+                <button class="rating-tab" data-period="all">Barcha vaqt</button>
+            </div>
+            <div class="rating-table-container">
+                <table class="rating-table" id="ratingTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Foydalanuvchi</th>
+                            <th>Testlar soni</th>
+                            <th>Umumiy ball</th>
+                            <th>To'g'ri %</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ratingBody">
+                        <!-- Dinamik to'ldiriladi -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="about-section">
+        <div class="about-container">
+            <div class="about-content">
+                <h2>QuizMaster <span class="gradient-text">haqida</span></h2>
+                <p>QuizMaster - bu bilimlarni sinash va yangi narsalarni o'rganish uchun eng yaxshi platforma. Biz turli fanlardan qiziqarli testlar, interaktiv viktorinalar va reyting tizimini taklif etamiz.</p>
+                <div class="about-features">
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>500+ testlar</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>10.000+ foydalanuvchilar</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>6 ta fan yo'nalishi</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Kunlik sovrinlar</span>
+                    </div>
+                </div>
+            </div>
+            <div class="about-stats">
+                <div class="about-stat-card">
+                    <i class="fas fa-smile"></i>
+                    <span class="stat-number">98%</span>
+                    <span class="stat-label">Mamnun foydalanuvchilar</span>
+                </div>
+                <div class="about-stat-card">
+                    <i class="fas fa-clock"></i>
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">Qo'llab-quvvatlash</span>
+                </div>
+                <div class="about-stat-card">
+                    <i class="fas fa-gem"></i>
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Bepul</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <div class="footer-logo">
+                    <i class="fas fa-question-circle"></i>
+                    <h3>Quiz<span>Master</span></h3>
+                </div>
+                <p>Bilimlaringizni sinang va reytingda yuqori o'rinlarni egallang!</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Tezkor havolalar</h4>
+                <ul>
+                    <li><a href="#">Bosh sahifa</a></li>
+                    <li><a href="#quizzes">Testlar</a></li>
+                    <li><a href="#rating">Reyting</a></li>
+                    <li><a href="#about">Biz haqimizda</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Fanlar</h4>
+                <ul>
+                    <li><a href="#">Matematika</a></li>
+                    <li><a href="#">Fizika</a></li>
+                    <li><a href="#">Tarix</a></li>
+                    <li><a href="#">Adabiyot</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Bog'lanish</h4>
+                <ul class="contact-info">
+                    <li><i class="fas fa-envelope"></i> info@quizmaster.uz</li>
+                    <li><i class="fas fa-phone"></i> +998 90 123 45 67</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Toshkent, O'zbekiston</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 QuizMaster. Barcha huquqlar himoyalangan.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
